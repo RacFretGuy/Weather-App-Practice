@@ -1,15 +1,16 @@
 const apiKey="f4db925a3d6842e5a0775307252703";
 const url="http://api.weatherapi.com/v1/current.json?key=";
+const searchUrl="http://api.weatherapi.com/v1/search.json?key=";
 let query; 
 
 search();
+
 
 function getData(query){
    
     fetch(`${url}${apiKey}&q=${query}`)
         .then((response)=>{
             console.log(response);
-            
             return response.json();
         })
         .then((data)=>{
@@ -25,22 +26,48 @@ function getData(query){
         })
     
 }
-function suggestions(){
-
-}
 
 function search(){
-
-
     let searchPlace=document.getElementById("searchBar");
+    let delayType;
+
     searchPlace.addEventListener("search",()=>{
         query=searchPlace.value;
         getData(query);
         searchPlace.value="";
     })
     
+    searchPlace.addEventListener("input",()=>{
+        clearTimeout(delayType);
+        delayType=setTimeout(()=>{
+           autoComplete(searchPlace.value);
+        },1500);
+       
+        
+    })
+
+
 }
 
+function autoComplete(cityName){
+    let cities=[];
+   if(cityName!=""){
+    fetch(`${searchUrl}${apiKey}&q=`+cityName)
+    .then((response)=>{
+       return response.json();
+    })
+    .then((data)=>{
+       for(let i=0;i<data.length;i++){
+        console.log(data[i].name);
+       }
+    })
+    .catch((error)=>{
+        console.log(error);
+        
+    })
+   }   
+   
+}
 function populateData(data){
 
     let listOfData = document.getElementById("list");
