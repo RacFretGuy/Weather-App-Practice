@@ -30,24 +30,22 @@ function getData(query){
 function search(){
     let searchPlace=document.getElementById("searchBar");
     let delayType;
-
     
-        searchPlace.addEventListener("search",()=>{
+    searchPlace.addEventListener("search",()=>{
+        if(searchPlace.value!=""){
             query=searchPlace.value;
             getData(query);
             searchPlace.value="";
-        })
+        }     
+    })
     
-   
     searchPlace.addEventListener("input",()=>{
         clearTimeout(delayType);
         delayType=setTimeout(()=>{
            autoComplete(searchPlace.value);
         },400);
        
-        
     })
-
 
 }
 
@@ -55,18 +53,17 @@ function autoComplete(cityName){
    let dataList=document.getElementById("suggestions");
    let options=[];
   dataList.innerHTML="";
-   if(cityName!="" && cityName.length>=3){
+  
+  if(cityName!="" && cityName.length>=3){
     fetch(`${searchUrl}${apiKey}&q=`+cityName)
     .then((response)=>{
-       return response.json();
+             return response.json();
     })
     .then((data)=>{
        for(let i=0;i<data.length;i++){
-        console.log(data[i].name);
-        let option=dataList.appendChild(document.createElement("option"));
-        option.value=data[i].name;
-        
-        
+            console.log(data[i].name);
+            let option=dataList.appendChild(document.createElement("option"));
+            option.value=data[i].name;
        }
     })
     .catch((error)=>{
