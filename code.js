@@ -31,17 +31,19 @@ function search(){
     let searchPlace=document.getElementById("searchBar");
     let delayType;
 
-    searchPlace.addEventListener("search",()=>{
-        query=searchPlace.value;
-        getData(query);
-        searchPlace.value="";
-    })
     
+        searchPlace.addEventListener("search",()=>{
+            query=searchPlace.value;
+            getData(query);
+            searchPlace.value="";
+        })
+    
+   
     searchPlace.addEventListener("input",()=>{
         clearTimeout(delayType);
         delayType=setTimeout(()=>{
            autoComplete(searchPlace.value);
-        },1500);
+        },400);
        
         
     })
@@ -50,8 +52,10 @@ function search(){
 }
 
 function autoComplete(cityName){
-    let cities=[];
-   if(cityName!=""){
+   let dataList=document.getElementById("suggestions");
+   let options=[];
+  dataList.innerHTML="";
+   if(cityName!="" && cityName.length>=3){
     fetch(`${searchUrl}${apiKey}&q=`+cityName)
     .then((response)=>{
        return response.json();
@@ -59,6 +63,10 @@ function autoComplete(cityName){
     .then((data)=>{
        for(let i=0;i<data.length;i++){
         console.log(data[i].name);
+        let option=dataList.appendChild(document.createElement("option"));
+        option.value=data[i].name;
+        
+        
        }
     })
     .catch((error)=>{
@@ -66,7 +74,7 @@ function autoComplete(cityName){
         
     })
    }   
-   
+
 }
 function populateData(data){
 
